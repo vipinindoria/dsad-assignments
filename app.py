@@ -98,13 +98,27 @@ class ShortestTransformationSequence:
         self.t = t
         self.words = words
 
+    def get_shortest_transformation_sequence(self, graph):
+        visited = set()
+        queue = [[self.s]]
+        while queue:
+            path = queue.pop(0)
+            vertex = path[-1]
+            yield vertex, path
+            for neighbor in set(graph.get(vertex)) - visited:
+                visited.add(neighbor)
+                queue.append(path + [neighbor])
+
     def solve(self):
         if self.s == self.t:
-            return 0, None
+            return -1, None
 
+        self.words.append(self.s)
         graph = GraphUtils(self.words).build_graph()
-        print(graph)
-        return None, None
+        for vertex, path in self.get_shortest_transformation_sequence(graph):
+            if vertex == self.t:
+                return len(path), ' -> '.join(path)
+        return -1, None
 
 
 if __name__ == '__main__':
