@@ -15,12 +15,13 @@ class HashTable:
         if self.table[index] is not None:
             for kvp in self.table[index]:
                 if kvp[0] == key:
-                    kvp[1] = value
+                    if value not in kvp[1]:
+                        kvp[1].append(value)
                     break
             else:
-                self.table[index].append([key, value])
+                self.table[index].append([key, [value]])
         else:
-            self.table[index].append((key, value))
+            self.table[index].append((key, [value]))
 
     def get(self, key):
         index = self.hash(key)
@@ -80,12 +81,13 @@ class GraphUtils:
                 bucket = '{}_{}'.format(vertex[:i], vertex[i + 1:])
                 self.buckets.insert(bucket, vertex)
 
-        print(self.buckets.table)
-        for bucket, mutual_neighbors in self.buckets.table:
-            for vertex1, vertex2 in product(mutual_neighbors, repeat=2):
-                if vertex1 != vertex2:
-                    self.graph.insert(vertex1, vertex2)
-                    self.graph.insert(vertex2, vertex1)
+        for table_row in self.buckets.table:
+            for elm in table_row:
+                mutual_neighbors = elm[1]
+                for vertex1, vertex2 in product(mutual_neighbors, repeat=2):
+                    if vertex1 != vertex2:
+                        self.graph.insert(vertex1, vertex2)
+                        self.graph.insert(vertex2, vertex1)
 
         return self.graph
 
