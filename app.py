@@ -2,6 +2,26 @@ import argparse
 from itertools import product
 
 
+class IOUtils:
+    def __init__(self, args):
+        self.args = args
+
+    def read_from_file(self):
+        begin_word = self.args.inputfile.readline().split("=")[1].strip()
+        end_word = self.args.inputfile.readline().split("=")[1].strip()
+        dict_list = self.args.inputfile.readline().split("=")[1].strip().split(",")
+        dict_list = [word.strip() for word in dict_list]
+        args.inputfile.close()
+        return begin_word, end_word, dict_list
+
+    def write_to_file(self, sts_length, st):
+        output_file = self.args.outputfile if args.outputfile else args.inputfile.name.replace('input', 'output')
+        with open(output_file, 'w') as f:
+            f.write(f'Length of shortest  transformation sequence : {sts_length}\n')
+            f.write(f'The shortest transformation is: {st}\n')
+        f.close()
+
+
 class HashTable:
     def __init__(self, size):
         self.size = size
@@ -122,6 +142,7 @@ class ShortestTransformationSequence:
 
 
 if __name__ == '__main__':
+    # Get Arguments
     parser = argparse.ArgumentParser(description="Application to Find the Shortest Transformation Sequence"
                                                  " to Reach a Target String from Source String.")
     parser.add_argument('-i', '--inputfile', type=argparse.FileType('r'), help='Input File Path', required=True)
@@ -129,19 +150,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Read Input
-    begin_word = args.inputfile.readline().split("=")[1].strip()
-    end_word = args.inputfile.readline().split("=")[1].strip()
-    dict_list = args.inputfile.readline().split("=")[1].strip().split(",")
-    dict_list = [word.strip() for word in dict_list]
-    args.inputfile.close()
+    io_obj = IOUtils(args)
+    begin_word, end_word, dict_list = io_obj.read_from_file()
 
     # Solve
-    sts = ShortestTransformationSequence(begin_word, end_word, dict_list)
-    sts_length, st = sts.solve()
+    sts_length, st = ShortestTransformationSequence(begin_word, end_word, dict_list).solve()
 
     # Write Output
-    output_file = args.outputfile if args.outputfile else args.inputfile.name.replace('input', 'output')
-    with open(output_file, 'w') as f:
-        f.write(f'Length of shortest  transformation sequence : {sts_length}\n')
-        f.write(f'The shortest transformation is: {st}\n')
-    f.close()
+    io_obj.write_to_file(sts_length, st)
