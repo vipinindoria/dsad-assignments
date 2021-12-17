@@ -1,26 +1,4 @@
-import argparse
 from itertools import product
-
-
-class IOUtils:
-    def __init__(self, args):
-        self.args = args
-
-    def read_from_file(self):
-        begin_word = self.args.inputfile.readline().split("=")[1].strip()
-        end_word = self.args.inputfile.readline().split("=")[1].strip()
-        dict_list = self.args.inputfile.readline().split("=")[1].strip().split(",")
-        dict_list = [word.strip() for word in dict_list]
-        args.inputfile.close()
-        return begin_word, end_word, dict_list
-
-    def write_to_file(self, sts_length, st):
-        output_file = self.args.outputfile if args.outputfile else args.inputfile.name.replace('input', 'output')
-        with open(output_file, 'w') as f:
-            f.write(f'Length of shortest  transformation sequence : {sts_length}\n')
-            f.write(f'The shortest transformation is: {st}\n')
-        f.close()
-
 
 class HashTable:
     def __init__(self, size):
@@ -104,6 +82,7 @@ class GraphUtils:
         for table_row in self.buckets.table:
             for elm in table_row:
                 mutual_neighbors = elm[1]
+                # print(list(product(mutual_neighbors, repeat=2)))
                 for vertex1, vertex2 in product(mutual_neighbors, repeat=2):
                     if vertex1 != vertex2:
                         self.graph.insert(vertex1, vertex2)
@@ -131,7 +110,7 @@ class ShortestTransformationSequence:
 
     def solve(self):
         if self.s == self.t:
-            return -1, None
+            return 0, self.s
 
         self.words.append(self.s)
         graph = GraphUtils(self.words).build_graph()
@@ -142,19 +121,36 @@ class ShortestTransformationSequence:
 
 
 if __name__ == '__main__':
-    # Get Arguments
-    parser = argparse.ArgumentParser(description="Application to Find the Shortest Transformation Sequence"
-                                                 " to Reach a Target String from Source String.")
-    parser.add_argument('-i', '--inputfile', type=argparse.FileType('r'), help='Input File Path', required=True)
-    parser.add_argument('-o', '--outputfile', type=argparse.FileType('w'), help='Output File Path')
-    args = parser.parse_args()
+    # Initialize basic variables
+    beginWord = ""
+    endWord = ""
+    Dict = []
 
-    # Read Input
-    io_obj = IOUtils(args)
-    begin_word, end_word, dict_list = io_obj.read_from_file()
+    # Input handling
+    with open('inputPS14.txt', 'r') as input_file:
+        lines = input_file.readlines()
+        for i in lines:
+            linelist = i.strip('\n').split('=')
+            if linelist[0].strip(' ') == 'beginWord':
+                beginWord = linelist[1].strip(' ')
+            if linelist[0].strip(' ') == 'endWord':
+                endWord = linelist[1].strip(' ')
+            if linelist[0].strip(' ') == 'Dict':
+                for x in linelist[1].split(','):
+                    Dict.append(x.strip(' '))
+    input_file.close()
+
+    # Adding the start and end words to the graph if not present
+    if beginWord not in Dict:
+        Dict.append(beginWord)
+    if endWord not in Dict:
+        Dict.append(endWord)
 
     # Solve
-    sts_length, st = ShortestTransformationSequence(begin_word, end_word, dict_list).solve()
+    sts_length, st = ShortestTransformationSequence(beginWord, endWord, Dict).solve()
 
     # Write Output
-    io_obj.write_to_file(sts_length, st)
+    with open('outputPS14.txt', 'w') as output_file:
+        output_file.write(f'Length of shortest  transformation sequence : {sts_length}\n')
+        output_file.write(f'The shortest transformation is: {st}\n')
+    output_file.close()
