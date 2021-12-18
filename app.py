@@ -7,10 +7,10 @@ class IOUtils:
         self.args = args
 
     def read_from_file(self):
-        begin_word = self.args.inputfile.readline().split("=")[1].strip()
-        end_word = self.args.inputfile.readline().split("=")[1].strip()
+        begin_word = self.args.inputfile.readline().split("=")[1].strip().strip('"').strip("'")
+        end_word = self.args.inputfile.readline().split("=")[1].strip().strip('"').strip("'")
         dict_list = self.args.inputfile.readline().split("=")[1].strip().split(",")
-        dict_list = [word.strip() for word in dict_list]
+        dict_list = [word.strip().strip('"').strip("'") for word in dict_list]
         args.inputfile.close()
         return begin_word, end_word, dict_list
 
