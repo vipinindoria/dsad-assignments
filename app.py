@@ -131,14 +131,14 @@ class ShortestTransformationSequence:
 
     def solve(self):
         if self.s == self.t:
-            return -1, None
+            return 0, "Start and end words are same."
 
         self.words.append(self.s)
         graph = GraphUtils(self.words).build_graph()
         for vertex, path in self.get_shortest_transformation_sequence(graph):
             if vertex == self.t:
                 return len(path), ' -> '.join(path)
-        return -1, None
+        return -1, "No transformation sequence found."
 
 
 if __name__ == '__main__':
