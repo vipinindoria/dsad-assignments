@@ -134,9 +134,7 @@ class ShortestTransformationSequence:
             return -1, None
 
         self.words.append(self.s)
-        print(self.words)
         graph = GraphUtils(self.words).build_graph()
-        print(graph)
         for vertex, path in self.get_shortest_transformation_sequence(graph):
             if vertex == self.t:
                 return len(path), ' -> '.join(path)
