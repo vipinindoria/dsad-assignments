@@ -100,7 +100,6 @@ class GraphUtils:
             for i in range(len(vertex)):
                 bucket = '{}_{}'.format(vertex[:i], vertex[i + 1:])
                 self.buckets.insert(bucket, vertex)
-
         for table_row in self.buckets.table:
             for elm in table_row:
                 mutual_neighbors = elm[1]
@@ -125,16 +124,19 @@ class ShortestTransformationSequence:
             path = queue.pop(0)
             vertex = path[-1]
             yield vertex, path
-            for neighbor in set(graph.get(vertex)) - visited:
-                visited.add(neighbor)
-                queue.append(path + [neighbor])
+            if graph.get(vertex) is not None:
+                for neighbor in set(graph.get(vertex)) - visited:
+                    visited.add(neighbor)
+                    queue.append(path + [neighbor])
 
     def solve(self):
         if self.s == self.t:
             return -1, None
 
         self.words.append(self.s)
+        print(self.words)
         graph = GraphUtils(self.words).build_graph()
+        print(graph)
         for vertex, path in self.get_shortest_transformation_sequence(graph):
             if vertex == self.t:
                 return len(path), ' -> '.join(path)
