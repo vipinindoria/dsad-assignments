@@ -3,10 +3,23 @@ from itertools import product
 
 
 class IOUtils:
+    """
+    Utility class for I/O operations
+    """
     def __init__(self, args):
+        """
+        Constructor
+        :param args:
+        """
         self.args = args
 
     def read_from_file(self):
+        """
+        Reads the input file and returns the startWord, endWord and list of dictionary words
+        :return: startWord: String,
+                 endWord: String,
+                 list of dictionary words: List of Strings
+        """
         begin_word = self.args.inputfile.readline().split("=")[1].strip().strip('"').strip("'")
         end_word = self.args.inputfile.readline().split("=")[1].strip().strip('"').strip("'")
         dict_list = self.args.inputfile.readline().split("=")[1].strip().split(",")
@@ -15,6 +28,12 @@ class IOUtils:
         return begin_word, end_word, dict_list
 
     def write_to_file(self, sts_length, st):
+        """
+        Writes the output to the output file
+        :param sts_length: Integer, length of the shortest path
+        :param st: String, shortest path
+        :return: None
+        """
         output_file = self.args.outputfile if args.outputfile else args.inputfile.name.replace('input', 'output')
         with open(output_file, 'w') as f:
             f.write(f'Length of shortest  transformation sequence : {sts_length}\n')
@@ -23,14 +42,32 @@ class IOUtils:
 
 
 class HashTable:
+    """
+    Hash table class
+    """
     def __init__(self, size):
+        """
+        Constructor
+        :param size: Integer, size of the hash table
+        """
         self.size = size
         self.table = [[] for _ in range(size)]
 
     def hash(self, key):
+        """
+        Hashing function
+        :param key: String, key to be hashed
+        :return: Integer, Hash value
+        """
         return sum(ord(c) for c in key) % self.size
 
     def insert(self, key, value):
+        """
+        Inserts the key-value pair in the hash table
+        :param key: String, key to be inserted
+        :param value: String, value to be inserted
+        :return: List of tuples, list of key-value pairs
+        """
         index = self.hash(key)
         if self.table[index] is not None:
             for kvp in self.table[index]:
@@ -44,58 +81,53 @@ class HashTable:
             self.table[index].append((key, [value]))
 
     def get(self, key):
+        """
+        Returns the value corresponding to the key
+        :param key: String, key to be searched
+        :return: Any, value corresponding to the key
+        """
         index = self.hash(key)
         for k, v in self.table[index]:
             if k == key:
                 return v
         return None
 
-    def delete(self, key):
-        index = self.hash(key)
-        for i, (k, v) in enumerate(self.table[index]):
-            if k == key:
-                del self.table[index][i]
-                return
-        raise KeyError(key)
-
-    def __str__(self):
-        return str(self.table)
-
-    def __repr__(self):
-        return str(self)
-
-    def __len__(self):
-        return len(self.table)
-
-    def __iter__(self):
-        for i in range(len(self.table)):
-            for k, v in self.table[i]:
-                yield k, v
-
-    def __contains__(self, key):
-        index = self.hash(key)
-        for k, v in self.table[index]:
-            if k == key:
-                return True
-        return False
-
     def __getitem__(self, key):
+        """
+        Returns the value corresponding to the key
+        :param key: String, key to be searched
+        :return: Value corresponding to the key
+        """
         return self.get(key)
 
     def __setitem__(self, key, value):
+        """
+        Inserts the key-value pair in the hash table
+        :param key: key to be inserted
+        :param value: value to be inserted
+        :return: key-value pair
+        """
         self.insert(key, value)
-
-    def __delitem__(self, key):
-        self.delete(key)
 
 
 class GraphUtils:
+    """
+    Graph utility class
+    """
     def __init__(self, vertices):
+        """
+        Constructor
+        :param vertices: List, list of vertices
+        """
         self.buckets = HashTable(10)
         self.graph = HashTable(10)
         self.vertices = vertices
 
     def build_graph(self):
+        """
+        Builds the graph
+        :return: graph
+        """
         for vertex in self.vertices:
             for i in range(len(vertex)):
                 bucket = '{}_{}'.format(vertex[:i], vertex[i + 1:])
@@ -112,12 +144,26 @@ class GraphUtils:
 
 
 class ShortestTransformationSequence:
+    """
+    Shortest Transformation Sequence class
+    """
     def __init__(self, s, t, words):
+        """
+        Constructor
+        :param s: starting word
+        :param t: ending word
+        :param words: list of words
+        """
         self.s = s
         self.t = t
         self.words = words
 
     def get_shortest_transformation_sequence(self, graph):
+        """
+        Returns the shortest transformation sequence
+        :param graph: graph
+        :return: vertex, vertex sequence
+        """
         visited = set()
         queue = [[self.s]]
         while queue:
@@ -130,6 +176,10 @@ class ShortestTransformationSequence:
                     queue.append(path + [neighbor])
 
     def solve(self):
+        """
+        Creates the graph and finds the shortest transformation sequence using Breadth First Search
+        :return: no of transformations, vertex sequence
+        """
         if self.s == self.t:
             return 0, "Start and end words are same."
 
@@ -142,6 +192,9 @@ class ShortestTransformationSequence:
 
 
 if __name__ == '__main__':
+    """
+    Driver code
+    """
     # Get Arguments
     parser = argparse.ArgumentParser(description="Application to Find the Shortest Transformation Sequence"
                                                  " to Reach a Target String from Source String.")
