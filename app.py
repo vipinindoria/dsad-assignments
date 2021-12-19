@@ -129,9 +129,15 @@ class GraphUtils:
         :return: graph
         """
         for vertex in self.vertices:
+            init = False
             for i in range(len(vertex)):
                 bucket = '{}_{}'.format(vertex[:i], vertex[i + 1:])
                 self.buckets.insert(bucket, vertex)
+                if not init:
+                    self.buckets.insert(f"_{vertex}", vertex)
+                    self.buckets.insert(f"{vertex}_", vertex)
+                    init = True
+
         for table_row in self.buckets.table:
             for elm in table_row:
                 mutual_neighbors = elm[1]
@@ -139,7 +145,6 @@ class GraphUtils:
                     if vertex1 != vertex2:
                         self.graph.insert(vertex1, vertex2)
                         self.graph.insert(vertex2, vertex1)
-
         return self.graph
 
 
