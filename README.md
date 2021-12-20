@@ -5,14 +5,15 @@ data structure and algorithm design assignment in semester 1
 Peter is playing a word jumble game. In this game, he is given two words beginWord and endWord and a word list Dict.
 Peter has to find the shortest transformation sequence from beginWord to endWord and its length.The game rules are as below:
 1. Adjacent words in the chain only differ by one character.
-2. Each transformed word must exist in the word list. Note that beginWord is not a transformed word but endWord must be
-   in the Dict.
-Example:
-    Input: beginWord = "cold", endWord = "warm",
-           Dict = ["warm",”code”,"card",”come”,"cord",”ward”,”wet”]
-    Output:
-           Length: 5
-           The shortest transformation is:"cold"->"cord"->"card"->"ward"->"warm"
+2. Each transformed word must exist in the word list. 
+3. Note that beginWord is not a transformed word but endWord must be in the Dict.  
+
+Example:  
+    Input: beginWord = "cold", endWord = "warm",  
+           Dict = ["warm",”code”,"card",”come”,"cord",”ward”,”wet”]  
+    Output:  
+           Length: 5  
+           The shortest transformation is:"cold"->"cord"->"card"->"ward"->"warm"  
 
 ## Help to run the app
    - pyhton3 app.py -h
