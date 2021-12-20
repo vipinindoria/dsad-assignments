@@ -1,5 +1,5 @@
-# dsad-assignments
-data structure and algorithm design assignment in semester 1
+# DSAD-Assignments
+Data Structure and Algorithm Design Assignments in Semester 1
 
 ## Problem Statement
 Peter is playing a word jumble game. In this game, he is given two words beginWord and endWord and a word list Dict.
@@ -9,7 +9,8 @@ Peter has to find the shortest transformation sequence from beginWord to endWord
 3. Note that beginWord is not a transformed word but endWord must be in the Dict.  
 
 Example:  
-    Input: beginWord = "cold", endWord = "warm",  
+    Input:  
+           beginWord = "cold", endWord = "warm",  
            Dict = ["warm",”code”,"card",”come”,"cord",”ward”,”wet”]  
     Output:  
            Length: 5  
@@ -20,9 +21,15 @@ Example:
 
 ## Run the App:
   - pyhton3 app.py -i input.txt -o output.txt  
-  or
+
+  or  
+  
   - pyhton3 app.py --inputfile input.txt --outputfile output.txt  
-  or if output file name is not provided, then output file will be named as input file name with replacing input by output
+  
+  or if output file name is not provided, then output file will be named as input file name with replacing input by output  
+  
   - pyhton3 app.py --inputfile input.txt  
-  or
+  
+  or  
+  
   - pyhton3 app.py -i input.txt  
