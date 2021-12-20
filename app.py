@@ -131,8 +131,10 @@ class GraphUtils:
         for vertex in self.vertices:
             init = False
             for i in range(len(vertex)):
-                bucket = '{}_{}'.format(vertex[:i], vertex[i + 1:])
-                self.buckets.insert(bucket, vertex)
+                bucket1 = '{}_{}'.format(vertex[:i], vertex[i:])
+                bucket2 = '{}_{}'.format(vertex[:i], vertex[i + 1:])
+                self.buckets.insert(bucket1, vertex)
+                self.buckets.insert(bucket2, vertex)
                 if not init:
                     self.buckets.insert(f"_{vertex}", vertex)
                     self.buckets.insert(f"{vertex}_", vertex)

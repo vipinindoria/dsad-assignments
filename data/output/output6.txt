@@ -1,2 +1,2 @@
-Length of shortest  transformation sequence : 4
-The shortest transformation is: cold -> colds -> cotds -> catds
+Length of shortest  transformation sequence : 2
+The shortest transformation is: cold -> could
