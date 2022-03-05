@@ -18,21 +18,29 @@ class IOUtils:
         Reads the input file and returns the Adjacency matrix for the graph
         :return: matrix: List of Lists, Adjacency matrix for the graph
         """
-        matrix = []
-        line_no = 0
+        adjacency_dict = {}
+        city_to_index = {}
+        city_distance_matrix = []
+        unique_cities = set()
+        index = 0
         for line in self.args.inputfile:
-            idx = 0
-            row = []
-            for elm in line.split(','):
-                if idx != line_no and int(elm) == 0:
-                    row.append(math.inf)
-                else:
-                    row.append(int(elm))
-                idx += 1
-            line_no += 1
-            matrix.append(row)
+            line = line.strip()
+            if line:
+                start_city, end_city, distance = [int(elm) for elm in line.split('/')]
+                city_distance_matrix.append([start_city, end_city, distance])
+                unique_cities.add(start_city)
+                unique_cities.add(end_city)
         self.args.inputfile.close()
-        return matrix
+        for city in unique_cities:
+            city_to_index[city] = index
+            index += 1
+        for city_distance in city_distance_matrix:
+            start_city, end_city, distance = city_distance
+            if city_to_index[start_city] not in adjacency_dict:
+                adjacency_dict[city_to_index[start_city]] = [[city_to_index[end_city], distance]]
+            else:
+                adjacency_dict[city_to_index[start_city]].append([city_to_index[end_city], distance])
+        return adjacency_dict
 
     def write_to_file(self, matrix):
         """
@@ -45,6 +53,27 @@ class IOUtils:
         for row in matrix:
             output_file.write(','.join(map(str, row)) + '\n')
         output_file.close()
+
+
+class CommonUtils:
+    """
+    Class for utility functions
+    """
+    def __init__(self, adjacency_dict):
+        self.adjacency_dict = adjacency_dict
+
+    def create_adjacency_matrix(self):
+        """
+        Creates the adjacency matrix for the graph
+        :return: matrix: List of Lists, Adjacency matrix for the graph
+        """
+        matrix = [[math.inf if i != j else 0 for i in range(len(self.adjacency_dict))]
+                  for j in range(len(self.adjacency_dict))]
+
+        for start_city in self.adjacency_dict:
+            for end_city, distance in self.adjacency_dict[start_city]:
+                matrix[start_city][end_city] = distance
+        return matrix
 
 
 class ShortestPath:
@@ -81,8 +110,12 @@ if __name__ == '__main__':
     io_obj = IOUtils(args)
     graph = io_obj.read_from_file()
 
+    # Create Adjacency Matrix
+    common_obj = CommonUtils(graph)
+    adj_matrix = common_obj.create_adjacency_matrix()
+
     # Solve
-    distances = ShortestPath(graph).solve()
+    distances = ShortestPath(adj_matrix).solve()
 
     # Write Output
     io_obj.write_to_file(distances)
