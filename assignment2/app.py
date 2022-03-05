@@ -15,8 +15,8 @@ class IOUtils:
 
     def read_from_file(self):
         """
-        Reads the input file and returns the Adjacency matrix for the graph
-        :return: matrix: List of Lists, Adjacency matrix for the graph
+        Reads the input file and returns the Adjacency list for the graph
+        :return: matrix: Dict of Lists, Adjacency list for the graph
         """
         adjacency_dict = {}
         city_to_index = {}
@@ -58,6 +58,11 @@ class IOUtils:
 class CommonUtils:
     """
     Class for utility functions
+    """
+
+    """
+    Constructor for the class
+    param adjacency_dict: Dict of Lists, Adjacency list for the graph
     """
     def __init__(self, adjacency_dict):
         self.adjacency_dict = adjacency_dict
