@@ -1,6 +1,7 @@
 # DSAD-Assignments
 Data Structure and Algorithm Design Assignments in Semester 1
 
+## Assignment 1
 ## Problem Statement
 Peter is playing a word jumble game. In this game, he is given two words beginWord and endWord and a word list Dict.
 Peter has to find the shortest transformation sequence from beginWord to endWord and its length.The game rules are as below:
@@ -32,4 +33,7 @@ Example:
   
   or  
   
-  - pyhton3 app.py -i input.txt  
+  - pyhton3 app.py -i input.txt
+
+
+## Assignment 2
