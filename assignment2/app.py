@@ -91,7 +91,7 @@ class ShortestPath:
         self.matrix = matrix
         self.n = len(matrix)
 
-    def solve(self):
+    def solve_with_floyd_warshall(self):
         """
         Implementation of Floyd Warshall algorithm for finding shortest path among cities
         :return: matrix: List of Lists, Shortest distances between all pairs of major cities and towns within the state X
@@ -101,6 +101,38 @@ class ShortestPath:
                 for c in range(self.n):
                     self.matrix[r][c] = min(self.matrix[r][c], self.matrix[r][k] + self.matrix[k][c])
         return self.matrix
+
+    def solve_with_dijkstra(self):
+        """
+        Implementation of Dijkstra's algorithm for finding shortest path among cities
+        :return: matrix: List of Lists, Shortest distances between all pairs of major cities and towns within the state X
+        """
+
+        def calculate_min_distance(dist_arr, visit_arr):
+            min_distance = math.inf
+            min_index = -1
+            for i in range(self.n):
+                if dist_arr[i] <= min_distance and not visit_arr[i]:
+                    min_distance = dist_arr[i]
+                    min_index = i
+            return min_index
+
+        result = []
+        for start_city in range(self.n):
+            distance = [math.inf for i in range(self.n)]
+            visited = [False for i in range(self.n)]
+
+            distance[start_city] = 0
+
+            for i in range(self.n):
+                m = calculate_min_distance(distance, visited)
+                visited[m] = True
+                for j in range(self.n):
+                    if not visited[j] and self.matrix[m][j] != math.inf and distance[m] + self.matrix[m][j] < distance[j]:
+                        distance[j] = distance[m] + self.matrix[m][j]
+            result.append(distance)
+
+        return result
 
 
 if __name__ == '__main__':
@@ -120,7 +152,9 @@ if __name__ == '__main__':
     adj_matrix = common_obj.create_adjacency_matrix()
 
     # Solve
-    distances = ShortestPath(adj_matrix).solve()
+    distances_floyd_warshall = ShortestPath(adj_matrix).solve_with_floyd_warshall()
+
+    distances_dijkstra = ShortestPath(adj_matrix).solve_with_dijkstra()
 
     # Write Output
-    io_obj.write_to_file(distances)
+    io_obj.write_to_file(distances_floyd_warshall)
