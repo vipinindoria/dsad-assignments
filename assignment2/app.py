@@ -40,7 +40,7 @@ class IOUtils:
                 adjacency_dict[city_to_index[start_city]] = [[city_to_index[end_city], distance]]
             else:
                 adjacency_dict[city_to_index[start_city]].append([city_to_index[end_city], distance])
-        return adjacency_dict
+        return city_to_index, adjacency_dict
 
     def write_to_file(self, matrix):
         """
@@ -64,16 +64,17 @@ class CommonUtils:
     Constructor for the class
     param adjacency_dict: Dict of Lists, Adjacency list for the graph
     """
-    def __init__(self, adjacency_dict):
+    def __init__(self, adjacency_dict, total_cities):
         self.adjacency_dict = adjacency_dict
+        self.total_cities = total_cities
 
     def create_adjacency_matrix(self):
         """
         Creates the adjacency matrix for the graph
         :return: matrix: List of Lists, Adjacency matrix for the graph
         """
-        matrix = [[math.inf if i != j else 0 for i in range(len(self.adjacency_dict))]
-                  for j in range(len(self.adjacency_dict))]
+        matrix = [[math.inf if i != j else 0 for i in range(self.total_cities)]
+                  for j in range(self.total_cities)]
 
         for start_city in self.adjacency_dict:
             for end_city, distance in self.adjacency_dict[start_city]:
@@ -91,7 +92,7 @@ class ShortestPath:
         self.matrix = matrix
         self.n = len(matrix)
 
-    def solve_with_floyd_warshall(self):
+    def solve(self):
         """
         Implementation of Floyd Warshall algorithm for finding shortest path among cities
         :return: matrix: List of Lists, Shortest distances between all pairs of major cities and towns within the state X
@@ -101,38 +102,6 @@ class ShortestPath:
                 for c in range(self.n):
                     self.matrix[r][c] = min(self.matrix[r][c], self.matrix[r][k] + self.matrix[k][c])
         return self.matrix
-
-    def solve_with_dijkstra(self):
-        """
-        Implementation of Dijkstra's algorithm for finding shortest path among cities
-        :return: matrix: List of Lists, Shortest distances between all pairs of major cities and towns within the state X
-        """
-
-        def calculate_min_distance(dist_arr, visit_arr):
-            min_distance = math.inf
-            min_index = -1
-            for i in range(self.n):
-                if dist_arr[i] <= min_distance and not visit_arr[i]:
-                    min_distance = dist_arr[i]
-                    min_index = i
-            return min_index
-
-        result = []
-        for start_city in range(self.n):
-            distance = [math.inf for i in range(self.n)]
-            visited = [False for i in range(self.n)]
-
-            distance[start_city] = 0
-
-            for i in range(self.n):
-                m = calculate_min_distance(distance, visited)
-                visited[m] = True
-                for j in range(self.n):
-                    if not visited[j] and self.matrix[m][j] != math.inf and distance[m] + self.matrix[m][j] < distance[j]:
-                        distance[j] = distance[m] + self.matrix[m][j]
-            result.append(distance)
-
-        return result
 
 
 if __name__ == '__main__':
@@ -145,16 +114,15 @@ if __name__ == '__main__':
 
     # Read Input File
     io_obj = IOUtils(args)
-    graph = io_obj.read_from_file()
+    city_index, graph = io_obj.read_from_file()
+    total_cities = len(city_index)
 
     # Create Adjacency Matrix
-    common_obj = CommonUtils(graph)
+    common_obj = CommonUtils(graph, total_cities)
     adj_matrix = common_obj.create_adjacency_matrix()
 
     # Solve
-    distances_floyd_warshall = ShortestPath(adj_matrix).solve_with_floyd_warshall()
-
-    distances_dijkstra = ShortestPath(adj_matrix).solve_with_dijkstra()
+    distances = ShortestPath(adj_matrix).solve()
 
     # Write Output
-    io_obj.write_to_file(distances_floyd_warshall)
+    io_obj.write_to_file(distances)
