@@ -53,22 +53,22 @@ Requirements
 4. Implement the above problem statement using Python 3.7
 
 Example:  
-    Input: 
-           start_node/end_node/distance
-           0/1/2
-           1/2/7
-           2/1/6
-           2/3/1
-           3/5/3
-           5/0/1
-           5/1/4 
-    Output:
-              n1,n2,n3,n4,n5
-           n1 0,2,9,10,13
-           n2 12,0,7,8,11
-           n3 5,6,0,1,4
-           n4 4,6,13,0,3
-           n5 1,3,10,11,0
+    Input:  
+           start_node/end_node/distance  
+           0/1/2  
+           1/2/7  
+           2/1/6  
+           2/3/1  
+           3/5/3  
+           5/0/1  
+           5/1/4   
+    Output:  
+              n1,n2,n3,n4,n5  
+           n1 0,2,9,10,13  
+           n2 12,0,7,8,11  
+           n3 5,6,0,1,4  
+           n4 4,6,13,0,3  
+           n5 1,3,10,11,0  
 
 ## Help to run the app
    - pyhton3 app.py -h
