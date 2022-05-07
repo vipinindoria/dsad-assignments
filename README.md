@@ -1,90 +1,63 @@
-# DSAD-Assignments
-Data Structure and Algorithm Design Assignments in Semester 1
+# Project: Song Play Analysis with S3 and Redshift
+-------------------------
 
-## Assignment 1
-## Problem Statement
-Peter is playing a word jumble game. In this game, he is given two words beginWord and endWord and a word list Dict.
-Peter has to find the shortest transformation sequence from beginWord to endWord and its length.The game rules are as below:
-1. Adjacent words in the chain only differ by one character.
-2. Each transformed word must exist in the word list. 
-3. Note that beginWord is not a transformed word but endWord must be in the Dict.  
+### Introduction
 
-Example:  
-    Input:  
-           beginWord = "cold", endWord = "warm",  
-           Dict = ["warm",”code”,"card",”come”,"cord",”ward”,”wet”]  
-    Output:  
-           Length: 5  
-           The shortest transformation is:"cold"->"cord"->"card"->"ward"->"warm"  
+In this project, we try to help one music streaming startup, Sparkify, in building an ETL pipeline that extracts their data from S3, stages them in Redshift, and transforms data into a set of dimensional tables for their analytics team to continue finding insights in what songs their users are listening to.
 
-## Help to run the app
-   - pyhton3 app.py -h
+### Datasets
+Datasets used in this project are provided in two public **S3 buckets**. One bucket contains info about songs and artists, the second bucket has info concerning actions done by users (which song are listening, etc.. ). The objects contained in both buckets 
+are *JSON* files. 
 
-## Run the App:
-  - cd assignment1
-  - pyhton3 app.py -i input.txt -o output.txt  
+The **Redshift** service is where data will be ingested and transformed, in fact though `COPY` command we will access to the JSON files inside the buckets and copy their content on our *staging tables*.
 
-  or  
-  
-  - pyhton3 app.py --inputfile input.txt --outputfile output.txt  
-  
-  or if output file name is not provided, then output file will be named as input file name with replacing input by output  
-  
-  - pyhton3 app.py --inputfile input.txt  
-  
-  or  
-  
-  - pyhton3 app.py -i input.txt
+### Database Schema
+We have two staging tables which *copy* the JSON file inside the  **S3 buckets**.
+#### Staging Table 
++ **staging_songs** - info about songs and artists
++ **staging_events** - actions done by users (which song are listening, etc.. )
 
 
-## Assignment 2
-## Problem Statement
-There are dedicated teams in the state roadways department, which handles the task of preparation of tables indicating 
-distances between all pairs of major cities and towns in road maps of states. Assume that you are part of such a team 
-for State X. Your task is to find the shortest distances between all pairs of major cities and towns within the state X.
-The aim should be to find the highly efficient method for obtaining these shortest paths. The following graph contains 
-five nodes, and various directed and weighted edges. Consider this as the representation of the cities and the paths 
-between them.
+I createa a star schema optimized for queries on song play analysis. This includes the following tables.
 
-Requirements
-1. Formulate an efficient algorithm to perform the above task using Dynamic programming
-2. Provide a description about the design strategy used
-3. Analyse the time complexity of the algorithm and show that it is an “efficient” one.
-4. Implement the above problem statement using Python 3.7
+#### Fact Table 
++ **songplays** - records in event data associated with song plays i.e. records with page `NextSong`
 
-Example:  
-    Input:  
-           start_node/end_node/distance  
-           0/1/2  
-           1/2/7  
-           2/1/6  
-           2/3/1  
-           3/5/3  
-           5/0/1  
-           5/1/4   
-    Output:  
-              n1,n2,n3,n4,n5  
-           n1 0,2,9,10,13  
-           n2 12,0,7,8,11  
-           n3 5,6,0,1,4  
-           n4 4,6,13,0,3  
-           n5 1,3,10,11,0  
+#### Dimension Tables
++ **users** - users in the app
++ **songs** - songs in music database
++ **artists** - artists in music database
++ **time** - timestamps of records in **songplays** broken down into specific units
 
-## Help to run the app
-   - pyhton3 app.py -h
+### Data Warehouse Configurations and Setup
+* Create a new `IAM user` in your AWS account
+* Give it AdministratorAccess and Attach policies
+* Use access key and secret key to create clients for `EC2`, `S3`, `IAM`, and `Redshift`.
+* Create an `IAM Role` that makes `Redshift` able to access `S3 bucket` (ReadOnly)
+* Create a `RedShift Cluster` and get the `DWH_ENDPOIN(Host address)` and `DWH_ROLE_ARN` and fill the config file.
 
-## Run the App:
-  - cd assignment2
-  - pyhton3 app.py -i input.txt -o output.txt  
+### ETL Pipeline
++ Created tables to store the data from `S3 buckets`.
++ Loading the data from `S3 buckets` to staging tables in the `Redshift Cluster`.
++ Inserted data into fact and dimension tables from the staging tables.
 
-  or  
-  
-  - pyhton3 app.py --inputfile inputPS14.txt --outputfile outputPS14.txt  
-  
-  or if output file name is not provided, then output file will be named as input file name with replacing input by output  
-  
-  - pyhton3 app.py --inputfile inputPS14.txt  
-  
-  or  
-  
-  - pyhton3 app.py -i inputPS14.txt
+### Project Structure
+
++ `create_tables.py` - This script will drop old tables (if exist) ad re-create new tables.
++ `etl.py` - This script executes the queries that extract `JSON` data from the `S3 bucket` and ingest them to `Redshift`.
++ `sql_queries.py` - This file contains variables with SQL statement in String formats, partitioned by `CREATE`, `DROP`, `COPY` and `INSERT` statement.
++ `dhw.cfg` - Configuration file used that contains info about `Redshift`, `IAM` and `S3`
+
+### How to Run
+
+1. Create tables by running `create_tables.py`.
+
+2. Execute ETL process by running `etl.py`.
+
+
+
+
+
+
+
+
