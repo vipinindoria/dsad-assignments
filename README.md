@@ -1,63 +1,56 @@
-# Project: Song Play Analysis with S3 and Redshift
--------------------------
+# Sparkify Data Lake with Apache Spark
+The purpose of this project is to build an ETL pipeline that will be able to extract song and log data from an S3 bucket, process the data using Spark and load the data back into s3 as a set of dimensional tables in spark parquet files. This helps analysts to continue finding insights on what their users are listening to.
 
-### Introduction
+## Database Schema Design
+The tables created include one fact table, `songplays` and four dimensional tables namely `users`, `songs`, `artists` and `time`. This follows the star schema principle which will contain clean data that is suitable for OLAP(Online Analytical Processing) operations which will be what the analysts will need to conduct to find the insights they are looking for.
 
-In this project, we try to help one music streaming startup, Sparkify, in building an ETL pipeline that extracts their data from S3, stages them in Redshift, and transforms data into a set of dimensional tables for their analytics team to continue finding insights in what songs their users are listening to.
+## ETL Pipeline
+The data gets that gets extracted will need to be transformed to fit the data model in the target destination tables. For instance the source data for timestamp is in unix format and that will need to be converted to timestamp from which the year, month, day, hour values etc can be extracted which will fit in the relevant target time and songplays table columns. The script will also need to cater for duplicates, ensuring that they aren't part of the final data that is loaded in the tables.
 
-### Datasets
-Datasets used in this project are provided in two public **S3 buckets**. One bucket contains info about songs and artists, the second bucket has info concerning actions done by users (which song are listening, etc.. ). The objects contained in both buckets 
-are *JSON* files. 
+## Datasets used
+The datasets used are retrieved from the s3 bucket and are in the JSON format. There are two datasets namely `log_data` and `song_data`. The `song_data` dataset is a subset of the the [Million Song Dataset](http://millionsongdataset.com/) while the `log_data` contains generated log files based on the songs in `song_data`.
 
-The **Redshift** service is where data will be ingested and transformed, in fact though `COPY` command we will access to the JSON files inside the buckets and copy their content on our *staging tables*.
+## Project Files
+### etl.py
+This script once executed retrieves the song and log data in the s3 bucket, transforms the data into fact and dimensional tables then loads the table data back into s3 as parquet files. 
 
-### Database Schema
-We have two staging tables which *copy* the JSON file inside the  **S3 buckets**.
-#### Staging Table 
-+ **staging_songs** - info about songs and artists
-+ **staging_events** - actions done by users (which song are listening, etc.. )
+### dl.cfg
+Will contain your AWS keys.
 
+## Getting Started
+In order to have a copy of the project up and running locally, you will need to take note of the following:
 
-I createa a star schema optimized for queries on song play analysis. This includes the following tables.
+### Prerequisites
+   - Python 3.7 or greater.
+   - AWS Account.
 
-#### Fact Table 
-+ **songplays** - records in event data associated with song plays i.e. records with page `NextSong`
+   - Set your AWS access and secret key in the config file. 
+        ```
+        AWS_ACCESS_KEY_ID = <your aws key>
+        AWS_SECRET_ACCESS_KEY = <your aws secret>
+        ```
 
-#### Dimension Tables
-+ **users** - users in the app
-+ **songs** - songs in music database
-+ **artists** - artists in music database
-+ **time** - timestamps of records in **songplays** broken down into specific units
+### Installation
+   - Make a new directory and clone/copy project files into it.
+   - Download and install Apache Spark here https://spark.apache.org/downloads.html. Also ensure you have Java jdk8 installed locally.
+   - Create a virtualenv that will be your development environment, i.e:
+       ```
+       $ virtualenv ucde-data-lake
+       $ source ucde-data-lake/bin/activate
+       ```
+   - Install the following packages in your virtual environment:
 
-### Data Warehouse Configurations and Setup
-* Create a new `IAM user` in your AWS account
-* Give it AdministratorAccess and Attach policies
-* Use access key and secret key to create clients for `EC2`, `S3`, `IAM`, and `Redshift`.
-* Create an `IAM Role` that makes `Redshift` able to access `S3 bucket` (ReadOnly)
-* Create a `RedShift Cluster` and get the `DWH_ENDPOIN(Host address)` and `DWH_ROLE_ARN` and fill the config file.
+            - pyspark=2.4
 
-### ETL Pipeline
-+ Created tables to store the data from `S3 buckets`.
-+ Loading the data from `S3 buckets` to staging tables in the `Redshift Cluster`.
-+ Inserted data into fact and dimension tables from the staging tables.
-
-### Project Structure
-
-+ `create_tables.py` - This script will drop old tables (if exist) ad re-create new tables.
-+ `etl.py` - This script executes the queries that extract `JSON` data from the `S3 bucket` and ingest them to `Redshift`.
-+ `sql_queries.py` - This file contains variables with SQL statement in String formats, partitioned by `CREATE`, `DROP`, `COPY` and `INSERT` statement.
-+ `dhw.cfg` - Configuration file used that contains info about `Redshift`, `IAM` and `S3`
-
-### How to Run
-
-1. Create tables by running `create_tables.py`.
-
-2. Execute ETL process by running `etl.py`.
-
-
-
-
-
-
+- Alternatively you can install the requirements in the `requirements.txt` that's in this project by running the command:
+    ```
+    $ pip install -r requirements.txt
+     ```
+            
+### Terminal commands
+- Execute the ETL pipeline script by running:
+    ```
+    $ python etl.py
+    ```
 
 
