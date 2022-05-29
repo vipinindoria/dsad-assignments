@@ -20,7 +20,7 @@ The whole solution is cloud based on top of **Amazon Web Services (AWS)**. First
 
 #### The Data Model
 
-<img src="star-schema.png" align="centre">
+<img src="star-schema.PNG" align="centre">
 
 ## Structure of the Project
 
