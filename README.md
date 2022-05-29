@@ -2,7 +2,7 @@
 ## Data Engineering Capstone Project
 #### **Goal:** To support U.S Customs & Border Protection Department to make better decisions on Immigration Policies
 
-<img src="images/DataLake.png" align="centre">
+<img src="DataLake.png" align="centre">
 
 ## Overview
 
@@ -20,7 +20,7 @@ The whole solution is cloud based on top of **Amazon Web Services (AWS)**. First
 
 #### The Data Model
 
-<img src="images/star-schema.png" align="centre">
+<img src="star-schema.png" align="centre">
 
 ## Structure of the Project
 
