@@ -1,56 +1,33 @@
-# Sparkify Data Lake with Apache Spark
-The purpose of this project is to build an ETL pipeline that will be able to extract song and log data from an S3 bucket, process the data using Spark and load the data back into s3 as a set of dimensional tables in spark parquet files. This helps analysts to continue finding insights on what their users are listening to.
+# US Immigration Data Lake
+## Data Engineering Capstone Project
+#### **Goal:** To support U.S Customs & Border Protection Department to make better decisions on Immigration Policies
 
-## Database Schema Design
-The tables created include one fact table, `songplays` and four dimensional tables namely `users`, `songs`, `artists` and `time`. This follows the star schema principle which will contain clean data that is suitable for OLAP(Online Analytical Processing) operations which will be what the analysts will need to conduct to find the insights they are looking for.
+<img src="images/DataLake.png" align="centre">
 
-## ETL Pipeline
-The data gets that gets extracted will need to be transformed to fit the data model in the target destination tables. For instance the source data for timestamp is in unix format and that will need to be converted to timestamp from which the year, month, day, hour values etc can be extracted which will fit in the relevant target time and songplays table columns. The script will also need to cater for duplicates, ensuring that they aren't part of the final data that is loaded in the tables.
+## Overview
 
-## Datasets used
-The datasets used are retrieved from the s3 bucket and are in the JSON format. There are two datasets namely `log_data` and `song_data`. The `song_data` dataset is a subset of the the [Million Song Dataset](http://millionsongdataset.com/) while the `log_data` contains generated log files based on the songs in `song_data`.
+The purpose of this data engineering capstone project is to give students a chance to combine what they've learned throughout the program. This project will be an important part of learners portfolio that will help to achieve data engineering-related career goals. We could choose to complete the project provided by the Udacity team or define the scope and data ourselves. I took the first approach in building the Data Lake on the data on immigration to the United States provided by Udacity.
 
-## Project Files
-### etl.py
-This script once executed retrieves the song and log data in the s3 bucket, transforms the data into fact and dimensional tables then loads the table data back into s3 as parquet files. 
+## Business Scenario
 
-### dl.cfg
-Will contain your AWS keys.
+A business consulting firm specialized in data warehouse services through assisting the enterprises with navigating their data needs and creating strategic operational solutions that deliver tangible business results is contacted by U.S Customs & Border Protection Department. Specifically, they want help with the modernization of department's data warehousing infrastructure by improving performance and ease of use for end users, enhancing functionality, decreasing total cost of ownership while making it possible for real-time decision making. In total, the department is asking for a full suite of services includes helping department with data profiling, data standardization, data acquisition, data transformation and integration.
 
-## Getting Started
-In order to have a copy of the project up and running locally, you will need to take note of the following:
+The U.S. Customs and Border Protection needs help to see what is hidden behind the data flood. The consulting firm aim to model and create a brand new analytics solution on top of the state-of-the-art technolgies available to enable department to unleash insights from data then making better decisions on immigration policies for those who came and will be coming in near future to the US.
 
-### Prerequisites
-   - Python 3.7 or greater.
-   - AWS Account.
+## The Architecture
 
-   - Set your AWS access and secret key in the config file. 
-        ```
-        AWS_ACCESS_KEY_ID = <your aws key>
-        AWS_SECRET_ACCESS_KEY = <your aws secret>
-        ```
+The whole solution is cloud based on top of **Amazon Web Services (AWS)**. First, all the datasets were preprocessed with **Apache Spark** and stored in a staging area in **AWS S3 bucket**. Then, it is loaded into a **Amazon Redshift** cluster using an **Apache Airflow** pipeline that transfers and checks the quality of the data to finally provide the department a Data Lake for their convenient analysis.
 
-### Installation
-   - Make a new directory and clone/copy project files into it.
-   - Download and install Apache Spark here https://spark.apache.org/downloads.html. Also ensure you have Java jdk8 installed locally.
-   - Create a virtualenv that will be your development environment, i.e:
-       ```
-       $ virtualenv ucde-data-lake
-       $ source ucde-data-lake/bin/activate
-       ```
-   - Install the following packages in your virtual environment:
+#### The Data Model
 
-            - pyspark=2.4
+<img src="images/star-schema.png" align="centre">
 
-- Alternatively you can install the requirements in the `requirements.txt` that's in this project by running the command:
-    ```
-    $ pip install -r requirements.txt
-     ```
-            
-### Terminal commands
-- Execute the ETL pipeline script by running:
-    ```
-    $ python etl.py
-    ```
+## Structure of the Project
 
+Following the Udacity guide for this project, the structure is as shown below:
 
+ - Step 1: Scope the Project and Gather Data
+ - Step 2: Explore and Assess the Data
+ - Step 3: Define the Data Model
+ - Step 4: Run ETL to Model the Data
+ - Step 5: Complete Project Write Up
