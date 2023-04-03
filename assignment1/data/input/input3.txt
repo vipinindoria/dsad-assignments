@@ -1,3 +1,0 @@
-beginWord = der
-endWord = dfs
-Dict = des, der, dfr, dgt, dfs

@@ -1,2 +1,0 @@
-Length of shortest  transformation sequence : 5
-The shortest transformation is: cold -> cord -> card -> ward -> warm

@@ -1,3 +1,0 @@
-beginWord = cold
-endWord = warm
-Dict = warm, code, card, come, cord, ward, wet 

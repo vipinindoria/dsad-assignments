@@ -1,3 +1,0 @@
-beginWord = cold
-endWord = could
-Dict = warm, wart, code, codes, card, come, cord, ward, wet, could

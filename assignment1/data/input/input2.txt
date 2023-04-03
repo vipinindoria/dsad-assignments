@@ -1,3 +1,0 @@
-beginWord = "toon"
-endWord = "plea"
-Dict = "poon", "plee", "same", "poie","plea","plie","poin"
